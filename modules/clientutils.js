@@ -474,21 +474,35 @@
                 return input.checked;
             }
             function getMultipleValues(inputs) {
-                type = inputs[0].getAttribute('type').toLowerCase();
-                if (type === 'radio') {
-                    var value;
-                    [].forEach.call(inputs, function(radio) {
-                        value = radio.checked ? radio.value : undefined;
-                    });
-                    return value;
-                } else if (type === 'checkbox') {
+                if (inputs[0] instanceof HTMLSelectElement) {
                     var values = [];
-                    [].forEach.call(inputs, function(checkbox) {
-                        if (checkbox.checked) {
-                            values.push(checkbox.value);
-                        }
+                    [].forEach.call(inputs, function(select) {
+                        values.push(select.value);
                     });
                     return values;
+                } else {
+                    type = inputs[0].getAttribute('type').toLowerCase();
+                    if (type === 'radio') {
+                        var value;
+                        [].forEach.call(inputs, function(radio) {
+                            value = radio.checked ? radio.value : undefined;
+                        });
+                        return value;
+                    } else if (type === 'checkbox') {
+                        var values = [];
+                        [].forEach.call(inputs, function(checkbox) {
+                            if (checkbox.checked) {
+                                values.push(checkbox.value);
+                            }
+                        });
+                        return values;
+                    } else if (type === 'text') {
+                        var values = [];
+                        [].forEach.call(inputs, function(input) {
+                          values.push(input.value);
+                        });
+                        return values;
+                    }
                 }
             }
             var inputs = this.findAll('[name="' + inputName + '"]'), type;
